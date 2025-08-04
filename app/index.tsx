@@ -1,6 +1,6 @@
 import React from "react";
-import UI2 from "../Designes/ui_2";
+import UI4 from "../Designes/ui_4";
 
 export default function HomePage() {
-  return <UI2 />;
+  return <UI4 />;
 }

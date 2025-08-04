@@ -18,3 +18,41 @@ alwaysApply: false
    - Examples: ui_1.tsx, ui_2.tsx → next is ui_3.tsx
 4. **Reference Images**: If an image is provided in the chat, use it as reference to create the UI design
 5. **File Structure**: Follow React Native/Expo component structure with TypeScript
+
+## App Layout Structure
+
+When creating UI designs, include these core components and layout elements:
+
+### Required Components:
+
+- **Progress Bar**: Visual indicator showing task completion or progress
+- **Todo List**: Main list component for displaying tasks/items
+- **Header**: Top navigation or title area
+- **Action Buttons**: Primary action buttons (Add, Edit, Delete, etc.)
+
+### Layout Structure:
+
+```
+┌─────────────────────┐
+│      Header         │
+├─────────────────────┤
+│   Progress Bar      │
+├─────────────────────┤
+│                     │
+│    Todo List        │
+│    - Item 1         │
+│    - Item 2         │
+│    - Item 3         │
+│                     │
+├─────────────────────┤
+│  Action Buttons     │
+└─────────────────────┘
+```
+
+### Design Considerations:
+
+- Use consistent spacing and padding
+- Implement proper touch targets for mobile interaction
+- Include loading states and empty states
+- Follow material design or iOS design principles
+- Ensure accessibility compliance
