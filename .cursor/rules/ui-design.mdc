@@ -1,0 +1,20 @@
+---
+description: Rules for creating new UI designs in the Designes folder
+globs:
+alwaysApply: false
+---
+
+# UI Design Creation Rules
+
+## When user says "create new design":
+
+1. **File Creation**: Create a new .tsx file in the `Designes/` folder
+2. **Naming Convention**: Use `ui_{n}.tsx` where n = highest existing number in Designes/ + 1
+   - Current files: ui_1.tsx, ui_2.tsx
+   - Next file should be: ui_3.tsx (and so on)
+3. **Calculate Next Number**:
+   - Check all files matching pattern `ui_*.tsx` in Designes/ folder
+   - Find the highest number and add 1
+   - Examples: ui_1.tsx, ui_2.tsx → next is ui_3.tsx
+4. **Reference Images**: If an image is provided in the chat, use it as reference to create the UI design
+5. **File Structure**: Follow React Native/Expo component structure with TypeScript
