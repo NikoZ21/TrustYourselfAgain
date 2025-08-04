@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-interface Task {
+interface Promise {
   id: string;
   title: string;
   description: string;
@@ -24,59 +24,61 @@ interface Task {
   completed: boolean;
 }
 
-const TodoAppUI = () => {
-  const [activeTab, setActiveTab] = useState<"TASKS" | "CHECKLIST">("TASKS");
+const PromiseAppUI = () => {
+  const [activeTab, setActiveTab] = useState<"PROMISES" | "CHECKLIST">(
+    "PROMISES"
+  );
   const [filter, setFilter] = useState("In Progress");
 
-  const tasks: Task[] = [
+  const promises: Promise[] = [
     {
       id: "1",
-      title: "Brando.Co Landing page idea",
+      title: "I will complete the workout routine today",
       description: "",
-      dueDate: "Due Today 16 Oct",
+      dueDate: "6h 45m left",
       priority: "HIGH",
       tags: ["HIGH", "DESIGN"],
       assignee: {
-        name: "Devon Lane",
+        name: "Niko",
         avatar: "👤",
       },
       completed: false,
     },
     {
       id: "2",
-      title: "Saoute Website re-design project review",
+      title: "I will clean the house thoroughly",
       description: "",
-      dueDate: "Due 18 Oct",
+      dueDate: "6h 45m left",
       priority: "NORMAL",
       tags: ["NORMAL", "DESIGN", "DEVELOPMENT"],
       assignee: {
-        name: "Floyd Miles",
+        name: "Niko",
         avatar: "👤",
       },
       completed: false,
     },
     {
       id: "3",
-      title: "Localz App Design Final Feedback",
+      title: "I will call my family this evening",
       description: "",
-      dueDate: "Due 17 Oct",
+      dueDate: "6h 45m left",
       priority: "HIGH",
       tags: ["HIGH", "DELIVERY"],
       assignee: {
-        name: "Eleanor Pena",
+        name: "Niko",
         avatar: "👤",
       },
       completed: false,
     },
     {
       id: "4",
-      title: "Teacherly Web Design",
+      title: "I will read for 30 minutes before bed",
       description: "",
-      dueDate: "Due 20 Oct",
+      dueDate: "6h 45m left",
       priority: "NORMAL",
       tags: ["NORMAL"],
       assignee: {
-        name: "Devon Lane",
+        name: "Niko",
         avatar: "👤",
       },
       completed: false,
@@ -113,15 +115,15 @@ const TodoAppUI = () => {
     }
   };
 
-  const TaskCard = ({ task }: { task: Task }) => (
-    <View style={styles.taskCard}>
-      <View style={styles.taskHeader}>
-        <Text style={styles.taskTitle}>{task.title}</Text>
-        <Text style={styles.dueDate}>{task.dueDate}</Text>
+  const PromiseCard = ({ promise }: { promise: Promise }) => (
+    <View style={styles.promiseCard}>
+      <View style={styles.promiseHeader}>
+        <Text style={styles.promiseTitle}>{promise.title}</Text>
+        <Text style={styles.dueDate}>{promise.dueDate}</Text>
       </View>
 
       <View style={styles.tagsContainer}>
-        {task.tags.map((tag, index) => (
+        {promise.tags.map((tag, index) => (
           <View
             key={index}
             style={[styles.tag, { backgroundColor: getTagColor(tag) }]}
@@ -131,15 +133,15 @@ const TodoAppUI = () => {
         ))}
       </View>
 
-      <View style={styles.taskFooter}>
-        <View style={styles.taskInfo}>
+      <View style={styles.promiseFooter}>
+        <View style={styles.promiseInfo}>
           <Ionicons name="document-outline" size={16} color="#999" />
-          <Text style={styles.taskCount}>1</Text>
+          <Text style={styles.promiseCount}>1</Text>
         </View>
         <View style={styles.assigneeContainer}>
-          <Text style={styles.assigneeName}>{task.assignee.name}</Text>
+          <Text style={styles.assigneeName}>{promise.assignee.name}</Text>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{task.assignee.avatar}</Text>
+            <Text style={styles.avatarText}>{promise.assignee.avatar}</Text>
           </View>
         </View>
       </View>
@@ -152,8 +154,8 @@ const TodoAppUI = () => {
         <MaterialIcons name="check-box" size={60} color="#FFB84D" />
       </View>
       <Text style={styles.emptyTitle}>
-        You don't have any checklist yet. Create a new checklist in TODOS on the
-        web.
+        You don't have any checklist yet. Create a new checklist in PROMISES on
+        the web.
       </Text>
     </View>
   );
@@ -167,7 +169,7 @@ const TodoAppUI = () => {
         <TouchableOpacity>
           <Ionicons name="menu" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>TODOS</Text>
+        <Text style={styles.headerTitle}>PROMISES</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.headerIcon}>
             <Ionicons name="notifications-outline" size={24} color="#333" />
@@ -181,16 +183,16 @@ const TodoAppUI = () => {
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === "TASKS" && styles.activeTab]}
-          onPress={() => setActiveTab("TASKS")}
+          style={[styles.tab, activeTab === "PROMISES" && styles.activeTab]}
+          onPress={() => setActiveTab("PROMISES")}
         >
           <Text
             style={[
               styles.tabText,
-              activeTab === "TASKS" && styles.activeTabText,
+              activeTab === "PROMISES" && styles.activeTabText,
             ]}
           >
-            TASKS
+            PROMISES
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -210,8 +212,8 @@ const TodoAppUI = () => {
 
       {/* Content */}
       <View style={styles.content}>
-        {activeTab === "TASKS" ? (
-          <View style={styles.tasksSection}>
+        {activeTab === "PROMISES" ? (
+          <View style={styles.promisesSection}>
             {/* Filter Dropdown */}
             <TouchableOpacity style={styles.filterContainer}>
               <Text style={styles.filterText}>{filter}</Text>
@@ -220,11 +222,11 @@ const TodoAppUI = () => {
 
             {/* Task List */}
             <ScrollView
-              style={styles.taskList}
+              style={styles.promiseList}
               showsVerticalScrollIndicator={false}
             >
-              {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
+              {promises.map((promise) => (
+                <PromiseCard key={promise.id} promise={promise} />
               ))}
             </ScrollView>
           </View>
@@ -234,7 +236,7 @@ const TodoAppUI = () => {
       </View>
 
       {/* Add Button */}
-      {activeTab === "TASKS" && (
+      {activeTab === "PROMISES" && (
         <TouchableOpacity style={styles.addButton}>
           <Ionicons name="add" size={24} color="#FFFFFF" />
         </TouchableOpacity>
@@ -248,7 +250,7 @@ const TodoAppUI = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <MaterialIcons name="assignment" size={24} color="#999" />
-          <Text style={styles.navText}>My Task</Text>
+          <Text style={styles.navText}>My Promises</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <MaterialIcons name="subscriptions" size={24} color="#999" />
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
-  tasksSection: {
+  promisesSection: {
     flex: 1,
   },
   filterContainer: {
@@ -329,10 +331,10 @@ const styles = StyleSheet.create({
     color: "#333",
     marginRight: 5,
   },
-  taskList: {
+  promiseList: {
     flex: 1,
   },
-  taskCard: {
+  promiseCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
@@ -346,13 +348,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  taskHeader: {
+  promiseHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
     marginBottom: 12,
   },
-  taskTitle: {
+  promiseTitle: {
     fontSize: 16,
     fontWeight: "600",
     color: "#333",
@@ -380,16 +382,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#333",
   },
-  taskFooter: {
+  promiseFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  taskInfo: {
+  promiseInfo: {
     flexDirection: "row",
     alignItems: "center",
   },
-  taskCount: {
+  promiseCount: {
     fontSize: 14,
     color: "#999",
     marginLeft: 5,
@@ -468,4 +470,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TodoAppUI;
+export default PromiseAppUI;
