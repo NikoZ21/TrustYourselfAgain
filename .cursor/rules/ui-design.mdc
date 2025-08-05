@@ -56,3 +56,46 @@ When creating UI designs, include these core components and layout elements:
 - Include loading states and empty states
 - Follow material design or iOS design principles
 - Ensure accessibility compliance
+
+## Design Variations & Color Palette Management
+
+### When to Create Design Variations:
+
+When user requests different color palettes for the same design layout (e.g., "create light/dark version", "change color palette"), organize as variations instead of separate ui_X.tsx files.
+
+### Variation Folder Structure:
+
+1. **Create Base Folder**: `Designes/ui_{X}/` where X is the original design number
+2. **Create Theme Subfolders**:
+   - `Designes/ui_{X}/light/` - For light color variations
+   - `Designes/ui_{X}/dark/` - For dark color variations
+3. **File Naming in Subfolders**: Use `v1.tsx`, `v2.tsx`, `v3.tsx`, etc.
+
+### Example Structure:
+
+```
+Designes/
+├── ui_1.tsx (original standalone design)
+├── ui_2.tsx (original standalone design)
+├── ui_3/
+│   ├── light/
+│   │   ├── v1.tsx (original ui_3.tsx moved here)
+│   │   ├── v2.tsx (blue/lavender variation)
+│   │   └── v3.tsx (future light variations)
+│   └── dark/
+│       ├── v1.tsx (dark theme variation)
+│       └── v2.tsx (future dark variations)
+└── ui_4.tsx (original standalone design)
+```
+
+### When to Apply Variation Structure:
+
+- **Use variations** when the layout/structure is identical but only colors change
+- **Use new ui_X.tsx** when the layout, components, or structure is different
+- **Reorganize existing files** when creating first variation of a design
+
+### Migration Process:
+
+1. Create `Designes/ui_{X}/light/` folder
+2. Move original `ui_{X}.tsx` to `Designes/ui_{X}/light/v1.tsx`
+3. Create new variations as `v2.tsx`, `v3.tsx`, etc. in appropriate theme folder
