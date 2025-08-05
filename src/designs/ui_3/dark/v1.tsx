@@ -240,7 +240,7 @@ const TodoAppUIDark = () => {
         </TouchableOpacity>
       )}
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
           <MaterialIcons name="home" size={24} color="#FF5757" />
@@ -258,7 +258,7 @@ const TodoAppUIDark = () => {
           <MaterialIcons name="calendar-today" size={24} color="#AAAAAA" />
           <Text style={styles.navText}>Calendar</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

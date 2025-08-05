@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "react-native";
 // import UI3_V1_Light from "../designs/ui_3/light/v1";
 // import UI3_V2_Light from "../designs/ui_3/light/v2";
 // import UI3_V3_Light from "../designs/ui_3/light/v3";
@@ -14,7 +13,13 @@ import { Text } from "react-native";
 // import UI3_V5_Dark from "../designs/ui_3/dark/v5";
 // import UI3_V6_Dark from "../../designs/ui_3/dark/v6";
 import UI3_V6_Dark from "@/designs/ui_3/dark/v6";
+import UI3_V1_Light from "@/designs/ui_3/light/v1";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
-  return <UI3_V6_Dark />;
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <UI3_V1_Light />
+    </SafeAreaView>
+  );
 }

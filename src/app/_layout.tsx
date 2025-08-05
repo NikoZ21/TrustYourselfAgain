@@ -1,46 +1,50 @@
 import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: "#007AFF",
-        headerStyle: {
-          backgroundColor: "#f8f8f8",
-        },
-        headerTintColor: "#000",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              color={color}
-              size={24}
-            />
-          ),
+    <SafeAreaProvider>
+      <StatusBar style="auto" />
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: "#FF6B6B", // Red/pink color from your design
+          tabBarInactiveTintColor: "#999",
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: "#fff",
+            borderTopWidth: 1,
+            borderTopColor: "#E5E5E5",
+            paddingBottom: 5,
+            paddingTop: 5,
+            height: 100,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "500",
+          },
         }}
-      />
-      <Tabs.Screen
-        name="friends"
-        options={{
-          title: "Friends",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "people" : "people-outline"}
-              color={color}
-              size={24}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Promises",
+            tabBarIcon: ({ color, focused }) => (
+              <MaterialIcons name="assignment" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="calendar"
+          options={{
+            title: "Calendar",
+            tabBarIcon: ({ color, focused }) => (
+              <MaterialIcons name="calendar-today" size={24} color={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    </SafeAreaProvider>
   );
 }

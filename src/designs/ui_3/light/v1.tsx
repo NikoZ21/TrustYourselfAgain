@@ -163,7 +163,6 @@ const PromiseAppUI = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity>
@@ -179,7 +178,6 @@ const PromiseAppUI = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
@@ -209,7 +207,6 @@ const PromiseAppUI = () => {
           </Text>
         </TouchableOpacity>
       </View>
-
       {/* Content */}
       <View style={styles.content}>
         {activeTab === "PROMISES" ? (
@@ -234,15 +231,13 @@ const PromiseAppUI = () => {
           <ChecklistEmptyState />
         )}
       </View>
-
       {/* Add Button */}
       {activeTab === "PROMISES" && (
         <TouchableOpacity style={styles.addButton}>
           <Ionicons name="add" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       )}
-
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
           <MaterialIcons name="home" size={24} color="#FF6B6B" />
@@ -260,7 +255,7 @@ const PromiseAppUI = () => {
           <MaterialIcons name="calendar-today" size={24} color="#999" />
           <Text style={styles.navText}>Calendar</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };
