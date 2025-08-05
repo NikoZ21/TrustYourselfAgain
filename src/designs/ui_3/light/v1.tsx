@@ -263,7 +263,7 @@ const PromiseAppUI = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#red",
   },
   header: {
     flexDirection: "row",
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 100,
+    bottom: 0,
     right: 20,
     width: 56,
     height: 56,

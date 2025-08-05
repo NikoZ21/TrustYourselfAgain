@@ -294,6 +294,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1F1F1F",
     paddingHorizontal: 20,
     paddingTop: 10,
+    paddingBottom: 15, // Add bottom padding to create space after tabs
   },
   tab: {
     paddingHorizontal: 20,
@@ -318,11 +319,13 @@ const styles = StyleSheet.create({
   },
   tasksSection: {
     flex: 1,
+    marginTop: 10, // Add top margin to create space from tabs
   },
   filterContainer: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 15,
+    marginBottom: 20, // Add bottom margin to create space after filter
   },
   filterText: {
     fontSize: 16,
@@ -331,6 +334,7 @@ const styles = StyleSheet.create({
   },
   taskList: {
     flex: 1,
+    marginTop: 5, // Add small top margin to create space from filter
   },
   taskCard: {
     backgroundColor: "#2A2A2A",
