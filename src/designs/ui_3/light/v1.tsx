@@ -30,6 +30,11 @@ const PromiseAppUI = () => {
   );
   const [filter, setFilter] = useState("In Progress");
 
+  // Mock user data - in a real app this would come from a state management solution
+  const [userLevel] = useState(7);
+  const [currentLevelProgress] = useState(65); // percentage to next level
+  const [trustPoints] = useState(65);
+
   const promises: Promise[] = [
     {
       id: "1",
@@ -83,7 +88,38 @@ const PromiseAppUI = () => {
       },
       completed: false,
     },
+    {
+      id: "5",
+      title: "I will meditate for 10 minutes",
+      description: "",
+      dueDate: "2h 15m left",
+      priority: "LOW",
+      tags: ["LOW"],
+      assignee: {
+        name: "Niko",
+        avatar: "👤",
+      },
+      completed: true,
+    },
+    {
+      id: "6",
+      title: "I will drink 8 glasses of water",
+      description: "",
+      dueDate: "12h left",
+      priority: "NORMAL",
+      tags: ["NORMAL"],
+      assignee: {
+        name: "Niko",
+        avatar: "👤",
+      },
+      completed: true,
+    },
   ];
+
+  // Calculate today's promise statistics
+  const todayPromises = promises.length;
+  const completedPromises = promises.filter((p) => p.completed).length;
+  const remainingPromises = todayPromises - completedPromises;
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -114,6 +150,52 @@ const PromiseAppUI = () => {
         return "#E0E0E0";
     }
   };
+
+  const LevelCard = ({
+    level,
+    progress,
+    trustPoints,
+    completed,
+    remaining,
+    total,
+  }: {
+    level: number;
+    progress: number;
+    trustPoints: number;
+    completed: number;
+    remaining: number;
+    total: number;
+  }) => (
+    <View style={styles.levelCard}>
+      <View style={styles.levelCardHeader}>
+        <Text style={styles.levelTitle}>Level {level}</Text>
+        <Text style={styles.trustPoints}>{trustPoints} Trust Points</Text>
+      </View>
+
+      <View style={styles.levelProgressContainer}>
+        <View style={styles.levelProgressBackground}>
+          <View style={[styles.levelProgressFill, { width: `${progress}%` }]}>
+            <Text style={styles.progressPercentageText}>{progress}%</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.statsRow}>
+        <View style={styles.statColumn}>
+          <Text style={styles.statValue}>{completed}</Text>
+          <Text style={styles.cardStatLabel}>Completed</Text>
+        </View>
+        <View style={styles.statColumn}>
+          <Text style={styles.statValue}>{remaining}</Text>
+          <Text style={styles.cardStatLabel}>Remaining</Text>
+        </View>
+        <View style={styles.statColumn}>
+          <Text style={styles.statValue}>{total}</Text>
+          <Text style={styles.cardStatLabel}>Total</Text>
+        </View>
+      </View>
+    </View>
+  );
 
   const PromiseCard = ({ promise }: { promise: Promise }) => (
     <View style={styles.promiseCard}>
@@ -207,6 +289,21 @@ const PromiseAppUI = () => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Progress and Stats Section */}
+      {activeTab === "PROMISES" && (
+        <View style={styles.statsSection}>
+          <LevelCard
+            level={userLevel}
+            progress={currentLevelProgress}
+            trustPoints={trustPoints}
+            completed={completedPromises}
+            remaining={remainingPromises}
+            total={todayPromises}
+          />
+        </View>
+      )}
+
       {/* Content */}
       <View style={styles.content}>
         {activeTab === "PROMISES" ? (
@@ -263,7 +360,8 @@ const PromiseAppUI = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#red",
+    backgroundColor: "#FFFFFF",
+    // backgroundColor: "red",
   },
   header: {
     flexDirection: "row",
@@ -462,6 +560,98 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#999",
     marginTop: 4,
+  },
+  // Stats Section Styles
+  statsSection: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  // Level Card Styles
+  levelCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    padding: 20,
+    marginTop: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  levelCardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  levelTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#4ECDC4",
+  },
+  trustPoints: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#666",
+  },
+  levelProgressContainer: {
+    marginBottom: 20,
+  },
+  levelProgressBackground: {
+    height: 16,
+    backgroundColor: "#E8E8E8",
+    borderRadius: 8,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#D0D0D0",
+    position: "relative",
+  },
+  levelProgressFill: {
+    height: "100%",
+    backgroundColor: "#FFE066",
+    borderRadius: 7,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingLeft: 10,
+    shadowColor: "#FFE066",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  progressPercentageText: {
+    fontSize: 12,
+    color: "#333",
+    fontWeight: "700",
+  },
+  statsRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  statColumn: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#4ECDC4",
+    marginBottom: 4,
+  },
+  cardStatLabel: {
+    fontSize: 12,
+    color: "#666",
+    fontWeight: "500",
   },
 });
 
