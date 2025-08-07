@@ -34,7 +34,7 @@ const PromiseAppUI = () => {
   const [currentLevelProgress] = useState(65); // percentage to next level
   const [trustPoints] = useState(65);
 
-  const promises: Promise[] = [
+  const [promises, setPromises] = useState<Promise[]>([
     {
       id: "1",
       title: "I will complete the workout routine today",
@@ -113,7 +113,17 @@ const PromiseAppUI = () => {
       },
       completed: true,
     },
-  ];
+  ]);
+
+  const togglePromise = (id: string) => {
+    setPromises((prevPromises) =>
+      prevPromises.map((promise) =>
+        promise.id === id
+          ? { ...promise, completed: !promise.completed }
+          : promise
+      )
+    );
+  };
 
   // Calculate today's promise statistics
   const todayPromises = promises.length;
@@ -196,7 +206,13 @@ const PromiseAppUI = () => {
     </View>
   );
 
-  const PromiseCard = ({ promise }: { promise: Promise }) => (
+  const PromiseCard = ({
+    promise,
+    onToggle,
+  }: {
+    promise: Promise;
+    onToggle: (id: string) => void;
+  }) => (
     <View style={styles.promiseCard}>
       <View style={styles.promiseHeader}>
         <Text style={styles.promiseTitle}>{promise.title}</Text>
@@ -216,8 +232,17 @@ const PromiseAppUI = () => {
 
       <View style={styles.promiseFooter}>
         <View style={styles.promiseInfo}>
-          <Ionicons name="document-outline" size={16} color="#999" />
-          <Text style={styles.promiseCount}>1</Text>
+          <TouchableOpacity
+            style={[
+              styles.checkbox,
+              promise.completed && styles.checkboxCompleted,
+            ]}
+            onPress={() => onToggle(promise.id)}
+          >
+            {promise.completed && (
+              <Ionicons name="checkmark" size={12} color="#fff" />
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.assigneeContainer}>
           <Text style={styles.assigneeName}>{promise.assignee.name}</Text>
@@ -243,7 +268,7 @@ const PromiseAppUI = () => {
             <Ionicons name="notifications-outline" size={24} color="#333" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIcon}>
-            <Ionicons name="search-outline" size={24} color="#333" />
+            <Ionicons name="settings-outline" size={24} color="#333" />
           </TouchableOpacity>
         </View>
       </View>
@@ -328,7 +353,11 @@ const PromiseAppUI = () => {
                 return true;
               })
               .map((promise) => (
-                <PromiseCard key={promise.id} promise={promise} />
+                <PromiseCard
+                  key={promise.id}
+                  promise={promise}
+                  onToggle={togglePromise}
+                />
               ))}
           </ScrollView>
         </View>
@@ -432,6 +461,7 @@ const styles = StyleSheet.create({
   },
   promiseList: {
     flex: 1,
+    backgroundColor: "#FFFFFF",
   },
   promiseCard: {
     backgroundColor: "#FFFFFF",
@@ -515,10 +545,25 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 16,
   },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#999",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+    backgroundColor: "transparent",
+  },
+  checkboxCompleted: {
+    backgroundColor: "#4ECDC4",
+    borderColor: "#4ECDC4",
+  },
 
   addButton: {
     position: "absolute",
-    bottom: 0,
+    bottom: 20,
     right: 20,
     width: 56,
     height: 56,
