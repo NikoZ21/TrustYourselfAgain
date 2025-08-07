@@ -25,10 +25,9 @@ interface Promise {
 }
 
 const PromiseAppUI = () => {
-  const [activeTab, setActiveTab] = useState<"PROMISES" | "CHECKLIST">(
-    "PROMISES"
-  );
-  const [filter, setFilter] = useState("In Progress");
+  const [activeFilter, setActiveFilter] = useState<
+    "All" | "Completed" | "Pending"
+  >("All");
 
   // Mock user data - in a real app this would come from a state management solution
   const [userLevel] = useState(7);
@@ -166,7 +165,7 @@ const PromiseAppUI = () => {
     remaining: number;
     total: number;
   }) => (
-    <View style={styles.levelCard}>
+    <View style={styles.levelCardContent}>
       <View style={styles.levelCardHeader}>
         <Text style={styles.levelTitle}>Level {level}</Text>
         <Text style={styles.trustPoints}>{trustPoints} Trust Points</Text>
@@ -182,7 +181,7 @@ const PromiseAppUI = () => {
 
       <View style={styles.statsRow}>
         <View style={styles.statColumn}>
-          <Text style={styles.statValue}>{completed}</Text>
+          <Text style={styles.completedStatValue}>{completed}</Text>
           <Text style={styles.cardStatLabel}>Completed</Text>
         </View>
         <View style={styles.statColumn}>
@@ -190,7 +189,7 @@ const PromiseAppUI = () => {
           <Text style={styles.cardStatLabel}>Remaining</Text>
         </View>
         <View style={styles.statColumn}>
-          <Text style={styles.statValue}>{total}</Text>
+          <Text style={styles.totalStatValue}>{total}</Text>
           <Text style={styles.cardStatLabel}>Total</Text>
         </View>
       </View>
@@ -230,18 +229,6 @@ const PromiseAppUI = () => {
     </View>
   );
 
-  const ChecklistEmptyState = () => (
-    <View style={styles.emptyState}>
-      <View style={styles.emptyIcon}>
-        <MaterialIcons name="check-box" size={60} color="#FFB84D" />
-      </View>
-      <Text style={styles.emptyTitle}>
-        You don't have any checklist yet. Create a new checklist in PROMISES on
-        the web.
-      </Text>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -260,80 +247,96 @@ const PromiseAppUI = () => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* Tab Navigation */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === "PROMISES" && styles.activeTab]}
-          onPress={() => setActiveTab("PROMISES")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === "PROMISES" && styles.activeTabText,
-            ]}
-          >
-            PROMISES
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === "CHECKLIST" && styles.activeTab]}
-          onPress={() => setActiveTab("CHECKLIST")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === "CHECKLIST" && styles.activeTabText,
-            ]}
-          >
-            CHECKLIST
-          </Text>
-        </TouchableOpacity>
-      </View>
 
       {/* Progress and Stats Section */}
-      {activeTab === "PROMISES" && (
-        <View style={styles.statsSection}>
-          <LevelCard
-            level={userLevel}
-            progress={currentLevelProgress}
-            trustPoints={trustPoints}
-            completed={completedPromises}
-            remaining={remainingPromises}
-            total={todayPromises}
-          />
-        </View>
-      )}
+      <View style={styles.statsSection}>
+        <LevelCard
+          level={userLevel}
+          progress={currentLevelProgress}
+          trustPoints={trustPoints}
+          completed={completedPromises}
+          remaining={remainingPromises}
+          total={todayPromises}
+        />
+      </View>
 
       {/* Content */}
       <View style={styles.content}>
-        {activeTab === "PROMISES" ? (
-          <View style={styles.promisesSection}>
-            {/* Filter Dropdown */}
-            <TouchableOpacity style={styles.filterContainer}>
-              <Text style={styles.filterText}>{filter}</Text>
-              <Ionicons name="chevron-down" size={16} color="#666" />
-            </TouchableOpacity>
-
-            {/* Task List */}
-            <ScrollView
-              style={styles.promiseList}
-              showsVerticalScrollIndicator={false}
+        <View style={styles.promisesSection}>
+          {/* Filter Tabs */}
+          <View style={styles.filterTabsContainer}>
+            <TouchableOpacity
+              style={[
+                styles.filterTab,
+                activeFilter === "All" && styles.activeFilterTab,
+              ]}
+              onPress={() => setActiveFilter("All")}
             >
-              {promises.map((promise) => (
+              <Text
+                style={[
+                  styles.filterTabText,
+                  activeFilter === "All" && styles.activeFilterTabText,
+                ]}
+              >
+                All
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterTab,
+                activeFilter === "Completed" && styles.activeFilterTab,
+              ]}
+              onPress={() => setActiveFilter("Completed")}
+            >
+              <Text
+                style={[
+                  styles.filterTabText,
+                  activeFilter === "Completed" && styles.activeFilterTabText,
+                ]}
+              >
+                Completed
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterTab,
+                activeFilter === "Pending" && styles.activeFilterTab,
+              ]}
+              onPress={() => setActiveFilter("Pending")}
+            >
+              <Text
+                style={[
+                  styles.filterTabText,
+                  activeFilter === "Pending" && styles.activeFilterTabText,
+                ]}
+              >
+                Pending
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Task List */}
+          <ScrollView
+            style={styles.promiseList}
+            showsVerticalScrollIndicator={false}
+          >
+            {promises
+              .filter((promise) => {
+                if (activeFilter === "All") return true;
+                if (activeFilter === "Completed") return promise.completed;
+                if (activeFilter === "Pending") return !promise.completed;
+                return true;
+              })
+              .map((promise) => (
                 <PromiseCard key={promise.id} promise={promise} />
               ))}
-            </ScrollView>
-          </View>
-        ) : (
-          <ChecklistEmptyState />
-        )}
+          </ScrollView>
+        </View>
       </View>
       {/* Add Button */}
-      {activeTab === "PROMISES" && (
-        <TouchableOpacity style={styles.addButton}>
-          <Ionicons name="add" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity style={styles.addButton}>
+        <Ionicons name="add" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
       {/* Bottom Navigation
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
@@ -384,29 +387,7 @@ const styles = StyleSheet.create({
   headerIcon: {
     marginLeft: 15,
   },
-  tabContainer: {
-    flexDirection: "row",
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 20,
-    paddingTop: 10,
-  },
-  tab: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginRight: 10,
-    borderRadius: 20,
-  },
-  activeTab: {
-    backgroundColor: "#FF6B6B",
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#666",
-  },
-  activeTabText: {
-    color: "#FFFFFF",
-  },
+
   content: {
     flex: 1,
     paddingHorizontal: 20,
@@ -414,15 +395,40 @@ const styles = StyleSheet.create({
   promisesSection: {
     flex: 1,
   },
-  filterContainer: {
+  filterTabsContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
+    backgroundColor: "#F8F9FA",
+    borderRadius: 12,
+    padding: 4,
+    marginVertical: 15,
   },
-  filterText: {
-    fontSize: 16,
-    color: "#333",
-    marginRight: 5,
+  filterTab: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activeFilterTab: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  filterTabText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#666",
+  },
+  activeFilterTabText: {
+    color: "#FF6B6B",
+    fontWeight: "600",
   },
   promiseList: {
     flex: 1,
@@ -509,21 +515,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 16,
   },
-  emptyState: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 40,
-  },
-  emptyIcon: {
-    marginBottom: 20,
-  },
-  emptyTitle: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#666",
-    lineHeight: 24,
-  },
+
   addButton: {
     position: "absolute",
     bottom: 0,
@@ -570,19 +562,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#F0F0F0",
   },
   // Level Card Styles
-  levelCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
+  levelCardContent: {
     padding: 20,
     marginTop: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
   },
   levelCardHeader: {
     flexDirection: "row",
@@ -592,8 +574,8 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     fontSize: 20,
-    fontWeight: "700",
-    color: "#4ECDC4",
+    fontWeight: "800",
+    color: "#FFE066",
   },
   trustPoints: {
     fontSize: 16,
@@ -614,12 +596,12 @@ const styles = StyleSheet.create({
   },
   levelProgressFill: {
     height: "100%",
-    backgroundColor: "#FFE066",
+    backgroundColor: "#4ECDC4",
     borderRadius: 7,
-    justifyContent: "center",
-    alignItems: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
     paddingLeft: 10,
-    shadowColor: "#FFE066",
+    shadowColor: "#4ECDC4",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -630,7 +612,7 @@ const styles = StyleSheet.create({
   },
   progressPercentageText: {
     fontSize: 12,
-    color: "#333",
+    color: "#666",
     fontWeight: "700",
   },
   statsRow: {
@@ -645,7 +627,19 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 20,
     fontWeight: "700",
+    color: "#FF6B6B",
+    marginBottom: 4,
+  },
+  completedStatValue: {
+    fontSize: 20,
+    fontWeight: "700",
     color: "#4ECDC4",
+    marginBottom: 4,
+  },
+  totalStatValue: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#DDA0DD",
     marginBottom: 4,
   },
   cardStatLabel: {
