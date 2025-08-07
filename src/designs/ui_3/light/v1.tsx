@@ -178,7 +178,7 @@ const PromiseAppUI = () => {
     <View style={styles.levelCardContent}>
       <View style={styles.levelCardHeader}>
         <Text style={styles.levelTitle}>Level {level}</Text>
-        <Text style={styles.trustPoints}>{trustPoints} Trust Points</Text>
+        {/* <Text style={styles.trustPoints}>{trustPoints} Trust Points</Text> */}
       </View>
 
       <View style={styles.levelProgressContainer}>
@@ -430,25 +430,30 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 4,
     marginVertical: 15,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
   },
   filterTab: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    margin: 2,
   },
   activeFilterTab: {
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#000",
+    backgroundColor: "#FF6B6B",
+    borderWidth: 1,
+    borderColor: "#FF5555",
+    shadowColor: "#FF6B6B",
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 4,
   },
   filterTabText: {
     fontSize: 14,
@@ -456,7 +461,7 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   activeFilterTabText: {
-    color: "#FF6B6B",
+    color: "#FFFFFF",
     fontWeight: "600",
   },
   promiseList: {
@@ -468,6 +473,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -557,8 +564,8 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   checkboxCompleted: {
-    backgroundColor: "#4ECDC4",
-    borderColor: "#4ECDC4",
+    backgroundColor: "#FF6B6B",
+    borderColor: "#FF6B6B",
   },
 
   addButton: {
@@ -610,6 +617,18 @@ const styles = StyleSheet.create({
   levelCardContent: {
     padding: 20,
     marginTop: 15,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    borderRadius: 12,
+    backgroundColor: "#FF6B6B",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   levelCardHeader: {
     flexDirection: "row",
@@ -620,12 +639,12 @@ const styles = StyleSheet.create({
   levelTitle: {
     fontSize: 20,
     fontWeight: "800",
-    color: "#FFE066",
+    color: "#FFFFFF",
   },
   trustPoints: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#666",
+    color: "#FFFFFF",
   },
   levelProgressContainer: {
     marginBottom: 20,
@@ -657,7 +676,7 @@ const styles = StyleSheet.create({
   },
   progressPercentageText: {
     fontSize: 12,
-    color: "#666",
+    color: "#FFFFFF",
     fontWeight: "700",
   },
   statsRow: {
@@ -672,24 +691,24 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#FF6B6B",
+    color: "#FFFFFF",
     marginBottom: 4,
   },
   completedStatValue: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#4ECDC4",
+    color: "#FFFFFF",
     marginBottom: 4,
   },
   totalStatValue: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#DDA0DD",
+    color: "#FFFFFF",
     marginBottom: 4,
   },
   cardStatLabel: {
     fontSize: 12,
-    color: "#666",
+    color: "#FFFFFF",
     fontWeight: "500",
   },
 });
