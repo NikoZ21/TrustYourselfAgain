@@ -7,6 +7,8 @@ import {
   ScrollView,
   Image,
   StatusBar,
+  Modal,
+  TextInput,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
@@ -114,6 +116,53 @@ const PromiseAppUI = () => {
       completed: true,
     },
   ]);
+
+  // New Promise Modal State
+  const [isNewPromiseVisible, setIsNewPromiseVisible] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newDueDate, setNewDueDate] = useState("");
+  const [newPriority, setNewPriority] = useState<"HIGH" | "NORMAL" | "LOW">(
+    "NORMAL"
+  );
+  const [newTags, setNewTags] = useState("");
+  const [newAssigneeName, setNewAssigneeName] = useState("Niko");
+
+  const toggleNewPromiseModal = () => {
+    setIsNewPromiseVisible((prev) => !prev);
+  };
+
+  const handleSaveNewPromise = () => {
+    if (!newTitle.trim()) {
+      // basic guard for empty title (design-only)
+      return;
+    }
+    const created: Promise = {
+      id: Date.now().toString(),
+      title: newTitle.trim(),
+      description: newDescription.trim(),
+      dueDate: newDueDate.trim() || "Today",
+      priority: newPriority,
+      tags: newTags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+      assignee: {
+        name: newAssigneeName.trim() || "Niko",
+        avatar: "👤",
+      },
+      completed: false,
+    };
+    setPromises((prev) => [created, ...prev]);
+    // reset fields for next time (design-first)
+    setNewTitle("");
+    setNewDescription("");
+    setNewDueDate("");
+    setNewPriority("NORMAL");
+    setNewTags("");
+    setNewAssigneeName("Niko");
+    setIsNewPromiseVisible(false);
+  };
 
   const togglePromise = (id: string) => {
     setPromises((prevPromises) =>
@@ -264,6 +313,12 @@ const PromiseAppUI = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>PROMISES</Text>
         <View style={styles.headerIcons}>
+          <TouchableOpacity
+            style={styles.headerIcon}
+            onPress={toggleNewPromiseModal}
+          >
+            <Ionicons name="add-circle-outline" size={24} color="#333" />
+          </TouchableOpacity>
           <TouchableOpacity style={styles.headerIcon}>
             <Ionicons name="notifications-outline" size={24} color="#333" />
           </TouchableOpacity>
@@ -362,8 +417,134 @@ const PromiseAppUI = () => {
           </ScrollView>
         </View>
       </View>
+      {/* new promis input - New Promise Modal */}
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isNewPromiseVisible}
+        onRequestClose={toggleNewPromiseModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>New Promise</Text>
+              <TouchableOpacity onPress={toggleNewPromiseModal}>
+                <Ionicons name="close" size={22} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              style={{ maxHeight: 420 }}
+              showsVerticalScrollIndicator={false}
+            >
+              <View style={styles.formGroup}>
+                <Text style={styles.inputLabel}>Title</Text>
+                <TextInput
+                  value={newTitle}
+                  onChangeText={setNewTitle}
+                  placeholder="What will you do?"
+                  placeholderTextColor="#999"
+                  style={styles.textInput}
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.inputLabel}>Description</Text>
+                <TextInput
+                  value={newDescription}
+                  onChangeText={setNewDescription}
+                  placeholder="Optional details"
+                  placeholderTextColor="#999"
+                  style={[
+                    styles.textInput,
+                    { height: 80, textAlignVertical: "top" },
+                  ]}
+                  multiline
+                />
+              </View>
+
+              <View style={styles.row}>
+                <View style={[styles.formGroup, { flex: 1, marginRight: 8 }]}>
+                  <Text style={styles.inputLabel}>Due</Text>
+                  <TextInput
+                    value={newDueDate}
+                    onChangeText={setNewDueDate}
+                    placeholder="e.g. 6h 45m left"
+                    placeholderTextColor="#999"
+                    style={styles.textInput}
+                  />
+                </View>
+                <View style={[styles.formGroup, { flex: 1, marginLeft: 8 }]}>
+                  <Text style={styles.inputLabel}>Priority</Text>
+                  <View style={styles.segmentedControl}>
+                    {(["HIGH", "NORMAL", "LOW"] as const).map((p) => (
+                      <TouchableOpacity
+                        key={p}
+                        style={[
+                          styles.segment,
+                          newPriority === p && styles.activeSegment,
+                        ]}
+                        onPress={() => setNewPriority(p)}
+                      >
+                        <Text
+                          style={[
+                            styles.segmentText,
+                            newPriority === p && styles.activeSegmentText,
+                          ]}
+                        >
+                          {p}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.inputLabel}>Tags</Text>
+                <TextInput
+                  value={newTags}
+                  onChangeText={setNewTags}
+                  placeholder="Comma separated (e.g. HIGH, DESIGN)"
+                  placeholderTextColor="#999"
+                  style={styles.textInput}
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.inputLabel}>Assignee</Text>
+                <TextInput
+                  value={newAssigneeName}
+                  onChangeText={setNewAssigneeName}
+                  placeholder="Who's responsible?"
+                  placeholderTextColor="#999"
+                  style={styles.textInput}
+                />
+              </View>
+            </ScrollView>
+
+            <View style={styles.actionRow}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={toggleNewPromiseModal}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.saveButton}
+                onPress={handleSaveNewPromise}
+              >
+                <Text style={styles.saveButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       {/* Add Button */}
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={toggleNewPromiseModal}
+      >
         <Ionicons name="add" size={24} color="#FFFFFF" />
       </TouchableOpacity>
       {/* Bottom Navigation
@@ -710,6 +891,123 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#FFFFFF",
     fontWeight: "500",
+  },
+  // Modal styles (design-consistent)
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.25)",
+    justifyContent: "flex-end",
+  },
+  modalContainer: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#333",
+  },
+  formGroup: {
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 6,
+    fontWeight: "600",
+  },
+  textInput: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: "#333",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  segmentedControl: {
+    flexDirection: "row",
+    backgroundColor: "#F8F9FA",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    padding: 4,
+  },
+  segment: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  activeSegment: {
+    backgroundColor: "#FF6B6B",
+    borderWidth: 1,
+    borderColor: "#FF5555",
+    elevation: 2,
+  },
+  segmentText: {
+    fontSize: 12,
+    color: "#666",
+    fontWeight: "600",
+  },
+  activeSegmentText: {
+    color: "#FFFFFF",
+  },
+  actionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    marginRight: 8,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+  },
+  cancelButtonText: {
+    fontSize: 14,
+    color: "#666",
+    fontWeight: "600",
+  },
+  saveButton: {
+    flex: 1,
+    marginLeft: 8,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: "#4ECDC4",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  saveButtonText: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    fontWeight: "700",
   },
 });
 
