@@ -74,18 +74,21 @@ When user requests different color palettes for the same design layout (e.g., "c
 ### Example Structure:
 
 ```
-Designes/
-├── ui_1.tsx (original standalone design)
-├── ui_2.tsx (original standalone design)
-├── ui_3/
-│   ├── light/
-│   │   ├── v1.tsx (original ui_3.tsx moved here)
-│   │   ├── v2.tsx (blue/lavender variation)
-│   │   └── v3.tsx (future light variations)
-│   └── dark/
-│       ├── v1.tsx (dark theme variation)
-│       └── v2.tsx (future dark variations)
-└── ui_4.tsx (original standalone design)
+Designs/
+├── PageName/
+│   ├── ui_1.tsx (original standalone design)
+│   ├── ui_2.tsx (original standalone design)
+│   ├── ui_3/
+│   │   ├── light/
+│   │   │   ├── v1.tsx (original ui_3.tsx moved here)
+│   │   │   ├── v2.tsx (blue/lavender variation)
+│   │   │   └── v3.tsx (future light variations)
+│   │   └── dark/
+│   │       ├── v1.tsx (dark theme variation)
+│   │       └── v2.tsx (future dark variations)
+│   └── ui_4.tsx (original standalone design)
+└── AnotherPage/
+    └── ...
 ```
 
 ### When to Apply Variation Structure:
