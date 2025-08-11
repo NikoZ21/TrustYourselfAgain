@@ -1,30 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
+import CalendarUI1 from "../page-designs/calendar/ui_1";
 
-export default function FriendsPage() {
+export default function CalendarPage() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Friends</Text>
-      <Text style={styles.subtitle}>Connect with your friends here!</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <CalendarUI1 />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
   },
 });
