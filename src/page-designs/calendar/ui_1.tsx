@@ -24,6 +24,7 @@ const TEXT_PRIMARY = "#333";
 const TEXT_SECONDARY = "#666";
 const BG_WHITE = "#FFFFFF";
 const BG_LIGHT = "#F8F9FA";
+const TEAL_LIGHT = "rgba(78,205,196,0.16)"; // transparent teal fill for completed days
 
 function formatISODate(year: number, monthIndex: number, day: number): string {
   // monthIndex: 0-11
@@ -213,11 +214,16 @@ export default function CalendarUI1() {
               {week.map((cell, colIdx) => {
                 const isToday = cell.date === todayISO;
                 const hasEvents = !!(cell.date && eventsByDate.get(cell.date));
+                const isCompleted = !!(
+                  cell.day &&
+                  (cell.day + visibleMonthIndex + visibleYear) % 5 === 0
+                );
                 return (
                   <View key={`${rowIdx}-${colIdx}`} style={styles.dayCell}>
                     <View
                       style={[
                         styles.dayInner,
+                        isCompleted && !isToday && styles.completedDay,
                         isToday && styles.today,
                         !cell.day && styles.emptyCell,
                       ]}
@@ -232,7 +238,7 @@ export default function CalendarUI1() {
                           {cell.day}
                         </Text>
                       ) : null}
-                      {hasEvents && <View style={styles.eventDot} />}
+                      {/* removed event dot */}
                     </View>
                   </View>
                 );
@@ -241,48 +247,36 @@ export default function CalendarUI1() {
           ))}
         </View>
 
-        {/* Today / Upcoming Events */}
+        {/* Summary Section */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Today</Text>
+          <Text style={styles.sectionTitle}>Summary</Text>
           <Text style={styles.sectionSubtitle}>
-            {todayEvents.length} events
+            {MONTHS[visibleMonthIndex]} Overview
           </Text>
         </View>
-        <View style={styles.eventList}>
-          {todayEvents.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>No events today</Text>
-              <Text style={styles.emptySubtext}>Tap + to add a new event</Text>
+        <View style={styles.summaryCard}>
+          <View style={styles.summaryRow}>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryNumber}>73%</Text>
+              <Text style={styles.summaryLabel}>Completion Rate</Text>
             </View>
-          ) : (
-            todayEvents.map((evt) => (
-              <View key={evt.id} style={styles.eventCard}>
-                <View style={styles.eventHeader}>
-                  <Text style={styles.eventTitle}>{evt.title}</Text>
-                  <Text style={[styles.eventTime, { color: ACCENT_RED }]}>
-                    {evt.time}
-                  </Text>
-                </View>
-                <View style={styles.eventTagsRow}>
-                  <View
-                    style={[
-                      styles.tag,
-                      { backgroundColor: getTagColor(evt.tag) },
-                    ]}
-                  >
-                    <Text style={styles.tagText}>{evt.tag ?? "NORMAL"}</Text>
-                  </View>
-                </View>
-              </View>
-            ))
-          )}
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryNumber}>22</Text>
+              <Text style={styles.summaryLabel}>Days Completed</Text>
+            </View>
+          </View>
+          <View style={styles.summaryRow}>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryNumber}>8</Text>
+              <Text style={styles.summaryLabel}>Current Streak</Text>
+            </View>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryNumber}>15</Text>
+              <Text style={styles.summaryLabel}>Best Streak</Text>
+            </View>
+          </View>
         </View>
       </ScrollView>
-
-      {/* Floating Add Button */}
-      <TouchableOpacity style={styles.addButton}>
-        <Ionicons name="add" size={24} color={BG_WHITE} />
-      </TouchableOpacity>
     </View>
   );
 }
@@ -339,7 +333,7 @@ const styles = StyleSheet.create({
   },
   weekdaysRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     backgroundColor: BG_LIGHT,
     borderWidth: 2,
     borderColor: BORDER,
@@ -356,13 +350,14 @@ const styles = StyleSheet.create({
   },
   grid: {
     marginTop: 12,
-    borderRadius: 12,
+    borderRadius: 10,
     borderWidth: 2,
     borderColor: BORDER,
     overflow: "hidden",
   },
   weekRow: {
     flexDirection: "row",
+    justifyContent: "center",
   },
   dayCell: {
     width: CELL_SIZE,
@@ -377,6 +372,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: BORDER,
   },
   dayText: {
     fontSize: 14,
@@ -384,7 +381,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   today: {
-    backgroundColor: ACCENT_TEAL,
+    backgroundColor: ACCENT_RED,
+  },
+  completedDay: {
+    backgroundColor: TEAL_LIGHT,
+    borderColor: ACCENT_TEAL,
   },
   dayTextToday: {
     color: BG_WHITE,
@@ -393,13 +394,34 @@ const styles = StyleSheet.create({
   emptyCell: {
     opacity: 0.25,
   },
-  eventDot: {
-    position: "absolute",
-    bottom: 6,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: ACCENT_RED,
+  summaryCard: {
+    backgroundColor: BG_WHITE,
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: BORDER,
+  },
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  summaryItem: {
+    flex: 1,
+    alignItems: "center",
+  },
+  summaryNumber: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: ACCENT_RED,
+    marginBottom: 4,
+  },
+  summaryLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: TEXT_SECONDARY,
+    textAlign: "center",
   },
   sectionHeader: {
     flexDirection: "row",
@@ -417,82 +439,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: TEXT_SECONDARY,
     fontWeight: "600",
-  },
-  eventList: {
-    marginBottom: 80,
-  },
-  eventCard: {
-    backgroundColor: BG_WHITE,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: BORDER,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  eventHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 10,
-  },
-  eventTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: TEXT_PRIMARY,
-    flex: 1,
-    marginRight: 10,
-  },
-  eventTime: {
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  eventTagsRow: {
-    flexDirection: "row",
-  },
-  tag: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 8,
-    backgroundColor: ACCENT_TEAL,
-  },
-  tagText: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-  emptyState: {
-    alignItems: "center",
-    paddingVertical: 30,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: TEXT_SECONDARY,
-    marginBottom: 6,
-  },
-  emptySubtext: {
-    fontSize: 12,
-    color: TEXT_SECONDARY,
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: ACCENT_TEAL,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 6,
   },
 });

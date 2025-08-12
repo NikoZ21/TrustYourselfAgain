@@ -1,6 +1,6 @@
 import React from "react";
 
-import UI3_V1_Light from "@/page-designs/calendar/ui_1";
+import UI3_V1_Light from "@/page-designs/promises/ui_3/light/v1";
 
 import {
   SafeAreaView,
