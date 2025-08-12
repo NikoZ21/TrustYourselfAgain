@@ -1,0 +1,43 @@
+---
+globs: **/page-designs/calendar/ui_1.tsx
+alwaysApply: false
+---
+
+# Calendar Code Section Mapping
+
+## When user says "completion logic" or "completion settings":
+
+**Target Code Section:** Calendar day completion detection and styling
+**Specific areas to modify:**
+
+- Line with: `const isCompleted = !!(cell.day && ((cell.day + visibleMonthIndex + visibleYear) % 5 === 0))`
+- Style: `completedDay` in StyleSheet
+- Colors: TEAL_LIGHT and ACCENT_TEAL variables
+- Conditional styling: `isCompleted && styles.completedDay` in dayInner View
+
+## When user says "summary" or "summary card":
+
+**Target Code Section:** Summary statistics card below calendar
+**Specific areas to modify:**
+
+- JSX section: `{/* Summary Section */}` block
+- Data: The hardcoded numbers (73%, 22, 8, 15)
+- Styles: `summaryCard`, `summaryRow`, `summaryItem`, `summaryNumber`, `summaryLabel`
+- Layout: The two View components with summaryRow style
+
+## When user says "calendar boxes" or "date cells":
+
+**Target Code Section:** Individual calendar day cells
+**Specific areas to modify:**
+
+- JSX: dayCell and dayInner View components
+- Styles: `dayCell`, `dayInner`, `dayText`, `today`, `completedDay`
+- Logic: Cell rendering loop in matrix.map()
+
+## When user says "calendar background":
+
+**Target Code Section:** Calendar grid container
+**Specific areas to modify:**
+
+- Style: `grid` backgroundColor property
+- JSX: The View with styles.grid
